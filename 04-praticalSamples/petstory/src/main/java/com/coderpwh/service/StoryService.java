@@ -70,11 +70,11 @@ public class StoryService {
             logger.info("Generating story for description: {}", description);
              // 系统提示词
             String systemPrompt = """
-                    You are a creative storyteller who writes fun, family-friendly short stories about pets.
-                    Keep stories under 500 words and appropriate for all ages.
+                    您是一位富有创意的故事家，专为全家创作妙趣横生的宠物主题短篇故事。
+                    故事字数请限制在500字以内，并确保内容老少皆宜。
                     """;
 
-            String userPrompt = "Write a fun short story about a pet described as:"+description;
+            String userPrompt = "请根据以下描述，写一个趣味横生的宠物主角短篇故事:"+description;
 
 
             ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
