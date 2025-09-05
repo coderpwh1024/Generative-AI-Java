@@ -33,6 +33,7 @@ public class StoryService {
 
         this.modelName = modelName;
 
+         // 获取GITHUB_TOKEN环境变量 TODO
         String githubToken = "";
 
         if (githubToken == null || githubToken.isBlank()) {
