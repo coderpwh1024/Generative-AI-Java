@@ -38,12 +38,62 @@ public class PetController {
     }
 
 
+    /***
+     *  生成故事
+     * @param description
+     * @param model
+     * @return
+     */
+    @PostMapping("/generate-story")
+
     public String generateStory(@RequestParam("description") @NotNull String description,
-                                Model model) {
-        logger.info("Generating story for description: {}", description);
-        String story = storyService.generateStory(description);
-        model.addAttribute("story", story);
-        return "story";
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+        logger.info("Received story generation request with description length: {}", description.length());
+        try {
+
+            if (description.trim().isEmpty()) {
+                logger.info("Empty description provided");
+                redirectAttributes.addFlashAttribute("error", "Please provide a description of your pet.");
+                return "redirect:/";
+            }
+
+            if (description.length() > 1000) {
+                logger.warn("Description too long: {} characters", description.length());
+                redirectAttributes.addFlashAttribute("error", "Description must be less than 1000 characters.");
+                return "redirect:/";
+            }
+
+            String sanitizedDescription = sanitizeInput(description);
+
+            String story;
+            boolean usingFallback = false;
+
+            try {
+                story = storyService.generateStory(sanitizedDescription);
+                logger.info("Generated story using AI service of length: {}", story.length());
+            } catch (Exception e) {
+                logger.error("AI StoryService failed, using fallback: {}", e.getMessage());
+                story = generateFallbackStory(sanitizedDescription);
+                logger.info("Generated story using fallback of length: {}", story.length());
+                usingFallback = true;
+            }
+
+            // Add results to model
+            model.addAttribute("caption", sanitizedDescription);
+            model.addAttribute("story", story);
+            if (usingFallback) {
+                model.addAttribute("analysisType", "Fallback analysis (AI service temporarily unavailable)");
+            } else {
+                model.addAttribute("analysisType", "AI-powered analysis");
+            }
+            return "result";
+        } catch (Exception e) {
+            logger.error("Error generating story", e);
+            redirectAttributes.addFlashAttribute("error", "An error occurred while generating your story. Please try again.");
+            return "redirect:/";
+        }
+
     }
 
 
@@ -52,9 +102,9 @@ public class PetController {
      * @param input
      * @return
      */
-    private  String sanitizeInput(String input){
-        if(input == null){
-            return  "";
+    private String sanitizeInput(String input) {
+        if (input == null) {
+            return "";
         }
 
         String sanitized = input.replaceAll("[<>\"'&]", "").trim();
@@ -62,7 +112,12 @@ public class PetController {
     }
 
 
-    private  String generateFallbackStory(String description){
+    /***
+     *  生成故事
+     * @param description
+     * @return
+     */
+    private String generateFallbackStory(String description) {
 
         String[] storyTemplates = {
                 "Meet the most wonderful pet in the world – a furry ball of energy and love who brings happiness wherever they go! This amazing companion starts each day with an enthusiastic tail wag and is always ready for the next adventure. Whether it's playing in the backyard, going for walks in the neighborhood, or simply enjoying belly rubs, this pet approaches life with boundless enthusiasm and loyalty. They have a special gift for making everyone smile with their playful antics and gentle spirit. At the end of each day, this faithful friend curls up nearby, content knowing they've spread joy and been the best companion anyone could ask for.",
@@ -76,9 +131,6 @@ public class PetController {
         int index = Math.abs(description.hashCode() % storyTemplates.length);
         return storyTemplates[index];
     }
-
-
-
 
 
 }
