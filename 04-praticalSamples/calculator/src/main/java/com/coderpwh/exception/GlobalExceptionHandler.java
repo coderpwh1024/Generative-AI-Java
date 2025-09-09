@@ -20,6 +20,19 @@ public class GlobalExceptionHandler {
     }
 
 
+
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception e){
+        ErrorResponse error = new ErrorResponse(
+                "Internal_Error",
+                "An unexpected error occurred: " + e.getMessage(),
+                "Please try again later or contact support if the issue persists. Check server logs for details.");
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+
     public static class ErrorResponse {
 
         private String code;
