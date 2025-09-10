@@ -44,34 +44,54 @@ public class SDKClient {
 
         // 链接服务懂，获取服务
         McpSchema.ListToolsResult toolsList = client.listTools();
-        System.out.println("Available Tools = " + toolsList);
+        System.out.println("工具信息为:" + toolsList);
+
+        System.out.println("----------------------------------------------------------------------------------------------------------------");
 
 
         CallToolResult resultAdd = client.callTool(new CallToolRequest("add", Map.of("a", 5.0, "b", 3.0)));
-        System.out.println("Add Result = " + resultAdd);
+        System.out.println("加法运算结果为:" + resultAdd);
+
+        System.out.println("----------------------------------------------------------------------------------------------------------------");
 
         CallToolResult resultSubtract = client.callTool(new CallToolRequest("subtract", Map.of("a", 10.0, "b", 4.0)));
-        System.out.println("Subtract Result = " + resultSubtract);
+        System.out.println("减法运算结果为:" + resultSubtract);
+
+        System.out.println("----------------------------------------------------------------------------------------------------------------");
 
         CallToolResult resultMultiply = client.callTool(new CallToolRequest("multiply", Map.of("a", 6.0, "b", 7.0)));
-        System.out.println("Multiply Result = " + resultMultiply);
+        System.out.println("乘法运算的结果为:" + resultMultiply);
+
+        System.out.println("----------------------------------------------------------------------------------------------------------------");
 
         CallToolResult resultDivide = client.callTool(new CallToolRequest("divide", Map.of("a", 20.0, "b", 4.0)));
-        System.out.println("Divide Result = " + resultDivide);
+        System.out.println("乘法运算的结果为:" + resultDivide);
 
+        System.out.println("----------------------------------------------------------------------------------------------------------------");
         CallToolResult resultPower = client.callTool(new CallToolRequest("power", Map.of("base", 2.0, "exponent", 8.0)));
-        System.out.println("Power Result = " + resultPower);
+        System.out.println("幂运算的结果为:" + resultPower);
+
+
+        System.out.println("----------------------------------------------------------------------------------------------------------------");
 
         CallToolResult resultSqrt = client.callTool(new CallToolRequest("squareRoot", Map.of("number", 16.0)));
-        System.out.println("Square Root Result = " + resultSqrt);
+        System.out.println("平方根运算的结果为:" + resultSqrt);
 
+
+
+        System.out.println("----------------------------------------------------------------------------------------------------------------");
         CallToolResult resultAbsolute = client.callTool(new CallToolRequest("absolute", Map.of("number", -5.5)));
-        System.out.println("Absolute Result = " + resultAbsolute);
+        System.out.println("绝对值运算的结果为:" + resultAbsolute);
 
+
+
+        System.out.println("----------------------------------------------------------------------------------------------------------------");
         // 获取帮助类-工具
         CallToolResult resultHelp = client.callTool(new CallToolRequest("help", Map.of()));
-        System.out.println("Help = " + resultHelp);
+        System.out.println("计算工具帮助类:" + resultHelp);
 
+
+        System.out.println("----------------------------------------------------------------------------------------------------------------");
         // 清理连接
         client.closeGracefully();
 
